@@ -7,6 +7,8 @@ import mongoose from "mongoose";
 import userRoutes from "./routes/user.js";
 import jobRoutes from "./routes/job.js";
 import log from "./middleware/log.js";
+import { errorLogger } from "./middleware/log.js";
+
 dotenv.config();
 
 const app = express();
@@ -15,6 +17,7 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(cors());
 app.use(log);
+app.use(errorLogger);
 app.use('/api/users', userRoutes);
 app.use('/api/jobs', jobRoutes);
 const connectDB = async () => {
