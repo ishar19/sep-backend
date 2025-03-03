@@ -22,7 +22,7 @@ const job = new mongoose.Schema({
         required: true
     },
     skills: {
-        type: Array,
+        type: [String],
         required: true
     },
     remote: {
@@ -46,3 +46,5 @@ const job = new mongoose.Schema({
         ref: 'User',
     }
 });
+
+export default mongoose.model('Job', job);
