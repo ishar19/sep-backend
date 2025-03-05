@@ -5,14 +5,19 @@ import job from "../models/job.js";
 const router = express.Router();
 //list all jobs
 // add filters here about skills and name
-// example url http://localhost:3000/api/jobs?name=ishar&skills=react,node
+// example url http://localhost:3000/api/jobs?name=ishar&skills=react,node&size=10&offset=20
+// adding pagination 
 router.get("/", async (req, res) => {
     const name = req.params.name || "";
     const skills = req.params.skills || [];
     const skillsArray = skills.split(",").map(skill => skill.trim());
+    const size = req.params.size || 10;
+    const offset = req.params.offset || 0;
     // JOB jOb Job
     const jobs = await job.find({
-        $or: [{ title: { $regex: name, $options: "i" } }, { skills: { $in: skillsArray } }]
+        $or: [{ title: { $regex: name, $options: "i" } }, { skills: { $in: skillsArray } }],
+        $limit: size,
+        $skip: offset
     });
     res.status(200).json(jobs);
 });
