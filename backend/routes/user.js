@@ -36,8 +36,8 @@ router.post("/register", errorLogger, async (req, res) => {
 
 router.post("/login", errorLogger, async (req, res) => {
     try {
-        const { username, password } = req.body;
-        const existingUser = await user.findOne({ username: username });
+        const { email, password } = req.body;
+        const existingUser = await user.findOne({ email: email });
         if (!existingUser) {
             return res.status(400).json({ message: "Invalid Credentials" });
         }
@@ -48,7 +48,7 @@ router.post("/login", errorLogger, async (req, res) => {
             }
             const token = jwt.sign({
                 id: existingUser._id,
-                username: existingUser.username
+                email: existingUser.email
             }, process.env.JWT_SECRET, { expiresIn: "1h" });
             res.status(200).json({ message: "User logged in successfully", token: token });
         }

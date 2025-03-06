@@ -35,7 +35,7 @@ router.post("/", authMiddleware, async (req, res) => {
             skills: jobSkills,
             remote,
             type,
-            createdBy: req.user._id
+            createdBy: req.user.id
         });
         await newJob.save();
         res.status(200).json(newJob);
@@ -47,8 +47,8 @@ router.post("/", authMiddleware, async (req, res) => {
 //get a job by id
 router.get("/:id", async (req, res) => {
     try {
-        const job = await job.findById(req.params.id);
-        if (!job) {
+        const dBJob = await job.findById(req.params.id);
+        if (!dBJob) {
             return res.status(404).json({
                 error: {
                     message: "Job not found",
@@ -56,7 +56,7 @@ router.get("/:id", async (req, res) => {
                 }
             });
         }
-        res.status(200).json(job);
+        res.status(200).json(dBJob);
     }
     catch (err) {
         errorLogger(err, req, res);
@@ -91,8 +91,8 @@ router.delete("/:id", authMiddleware, async (req, res) => {
 // edit a job 
 router.put("/:id", authMiddleware, async (req, res) => {
     try {
-        const job = await job.findById(req.params.id);
-        if (!job) {
+        const dBJob = await job.findById(req.params.id);
+        if (!dBJob) {
             return res.status(404).json({
                 error: {
                     message: "Job not found",
@@ -100,7 +100,9 @@ router.put("/:id", authMiddleware, async (req, res) => {
                 }
             });
         }
-        if (job.createdBy.toString() !== req.user._id.toString()) {
+        console.log(req.user)
+        console.log(dBJob)
+        if (dBJob.createdBy.toString() !== req.user.id.toString()) {
             return res.status(401).json({
                 error: {
                     message: "You are not authorized to edit this job",
